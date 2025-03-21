@@ -53,8 +53,10 @@ def test_concat():
     assert concat(None, None) is None
     assert concat(cons("a", None), None) == cons("a", None)
     assert concat(None, cons("a", None)) == cons("a", None)
-    assert concat(cons("a", None), cons("b", None)) == cons("a", cons("b", None))
-    assert concat(from_list([1, 2, 3]), from_list([4, 5, 6])) == from_list([1, 2, 3, 4, 5, 6])
+    assert concat(cons("a", None), cons("b", None)) == cons("a", cons("b",
+                                                                       None))
+    assert concat(from_list([1, 2, 3]), from_list([4, 5, 6])) == from_list(
+        [1, 2, 3, 4, 5, 6])
 
 
 def test_to_list():
