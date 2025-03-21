@@ -5,7 +5,8 @@ A series of functional requirements are realized and tested based on
 
 ## Project structure
 
-- `sc.py` -- Implementation of immutable algorithms based on hash map with separate chaining.
+- `sc.py` -- Implementation of immutable algorithms based on hash map 
+with separate chaining.
   Supports methods: `empty`, `cons`, `head`, `tail`, `add`, `remove`,
   `size`, `is_member`, `reverse`, `intersection`, `to_list`, `from_list`,
    `find`, `filter`, `map`, `reduce`, `iterator`, `concat`, `equals`, `to_string`.
@@ -47,8 +48,10 @@ A series of functional requirements are realized and tested based on
    - Duplicate values are rejected within the same bucket.
 
 - **Sorted Operation**:
-   - When we use sorted in our API tests, we find that it cannot sort different types of data.
-   - Correct approach: All sorted functions with data of different types are deleted.
+   - When we use sorted in our API tests, we find that it cannot sort
+   different types of data.
+   - Correct approach: All sorted functions with data of different
+   types are deleted.
 
 - **Compare mutable and immutable implementations**:
    - Mutable: Allows in situ modification, memory address unchanged, saving memory.
