@@ -53,8 +53,10 @@ def test_concat():
     assert concat(None, None) is None
     assert concat(cons("a", None), None) == cons("a", None)
     assert concat(None, cons("a", None)) == cons("a", None)
-    assert concat(cons("a", None), cons("b", None)) == cons("a", cons("b",
-                                                                       None))
+    assert concat(cons("a", None), cons("b", None)) == cons("a", cons(
+                                                                        "b",
+                                                                        None
+                                                                        ))
     assert concat(from_list([1, 2, 3]), from_list([4, 5, 6])) == from_list(
         [1, 2, 3, 4, 5, 6])
 
@@ -146,8 +148,11 @@ def test_reverse_property(lst):
     assert equals(reversed_twice, original)
 
 
-@given(st.lists(st.integers()), st.lists(st.integers()),
-        st.lists(st.integers()))
+@given(
+        st.lists(st.integers()),
+        st.lists(st.integers()),
+        st.lists(st.integers())
+        )
 def test_monoid_associativity(a, b, c):
     list_a = from_list(a)
     list_b = from_list(b)
