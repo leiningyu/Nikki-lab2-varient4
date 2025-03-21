@@ -6,6 +6,7 @@ A series of functional requirements are realized and tested based on
 ## Project structure
 
 - `sc.py` -- Implementation of immutable algorithms based on hash map
+
 with separate chaining.
 
   Supports methods: `empty`, `cons`, `head`, `tail`, `add`, `remove`,
