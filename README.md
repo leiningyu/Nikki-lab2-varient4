@@ -5,8 +5,9 @@ A series of functional requirements are realized and tested based on
 
 ## Project structure
 
-- `sc.py` -- Implementation of immutable algorithms based on hash map 
+- `sc.py` -- Implementation of immutable algorithms based on hash map
 with separate chaining.
+
   Supports methods: `empty`, `cons`, `head`, `tail`, `add`, `remove`,
   `size`, `is_member`, `reverse`, `intersection`, `to_list`, `from_list`,
    `find`, `filter`, `map`, `reduce`, `iterator`, `concat`, `equals`, `to_string`.
@@ -55,4 +56,5 @@ with separate chaining.
 
 - **Compare mutable and immutable implementations**:
    - Mutable: Allows in situ modification, memory address unchanged, saving memory.
-   - Immutable: New objects are generated with each modification, and old objects are retained.
+   - Immutable: New objects are generated with each modification, and
+   old objects are retained.
