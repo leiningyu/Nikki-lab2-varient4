@@ -1,4 +1,3 @@
-import copy
 from functools import reduce
 from typing import Callable, Any, Iterator
 
