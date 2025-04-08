@@ -56,7 +56,7 @@ def test_intersection():
     ht1 = from_list([1, 2, 3])
     assert to_list(intersection(ht1, empty_ht)) == []
     assert to_list(intersection(empty_ht, ht1)) == []
-    
+
     ht2 = from_list([1, 2, 3])
     ht3 = from_list([2, 3, 4])
     inter_partial = intersection(ht2, ht3)
@@ -127,56 +127,56 @@ def test_api():
     ht2 = cons(None, cons(1, empty))
     assert "1" in to_string(ht1) and "None" in to_string(ht1)
     assert equals(ht1, ht2)
-    
+
     # size
     assert size(empty) == 0
     assert size(ht1) == 2
-    
+
     # remove
     removed_none = remove(ht1, None)
     assert to_list(removed_none) == [1]
-    
+
     removed_one = remove(ht1, 1)
     assert to_list(removed_one) == [None]
-    
+
     # member
     assert not is_member(empty, None)
     assert is_member(ht1, None)
     assert is_member(ht1, 1)
     assert not is_member(ht1, 2)
-    
+
     # intersection
     inter = intersection(ht1, ht2)
     assert to_list(inter) == [1, None] or to_list(inter) == [None, 1]
-    
+
     # to_from_list
     to_list(ht1) == [1, None] or to_list(ht1) == [None, 1]
     assert equals(ht1, from_list([1, None]))
     assert equals(ht1, from_list([1, None, 1]))
-    
+
     # concat
     combined = concat(ht1, ht2)
     assert equals(combined, from_list([None, 1, 1, None]))
-    
+
     # iterator
     collected = []
     for item in iterator(ht1):
         collected.append(item)
     assert collected == [1, None] or collected == [None, 1]
-    
+
     # filter
     numbers = from_list([1, 2, 3, 4])
     even = filter(numbers, lambda x: x % 2 == 0)
     assert sorted(to_list(even)) == [2, 4]
-    
+
     # map
     doubled = map(numbers, lambda x: x * 2)
     assert sorted(to_list(doubled)) == [2, 4, 6, 8]
-    
+
     # reduce
     sum_result = ht_reduce(numbers, lambda acc, x: acc + x, 0)
     assert sum_result == 10
-    
+
     # empty
     assert ht_reduce(empty, lambda acc, x: acc + x, 0) == 0
 
