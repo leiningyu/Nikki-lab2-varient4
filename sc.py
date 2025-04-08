@@ -93,7 +93,7 @@ def remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
 def size(ht: ImmutableHashTable) -> int:
     if ht.is_empty():
         return 0
-    
+
     def count(node):
         return 0 if node is None else 1 + count(node._next)
     return sum(count(bucket) for bucket in ht._buckets)
@@ -218,7 +218,7 @@ def concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
         if bucket_a is None:
             return bucket_b
 
-        # Decide whether to add the current node after 
+        # Decide whether to add the current node after
         # processing the subsequent nodes
         merged_next = merge_bucket(bucket_a._next, bucket_b)
 
