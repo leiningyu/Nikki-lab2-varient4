@@ -50,15 +50,15 @@ def empty() -> ImmutableHashTable:
 def cons(value, ht: ImmutableHashTable) -> ImmutableHashTable:
     index = ht._hash(value)
     current = ht._get_bucket(index)
- 
+
     # Check repetition
     def contains(node):
         return node is not None and (
             node._value == value or contains(node._next))
- 
+
     if contains(current):
         return ht
- 
+
     # Insert new node
     return ht._with_updated_bucket(
         index, ImmutableNode(value, current))
@@ -79,7 +79,7 @@ def tail(node: ImmutableNode) -> ImmutableNode:
 def remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
     index = ht._hash(value)
     current = ht._get_bucket(index)
-    
+
     def _remove(node):
         if node is None:
             return None
@@ -93,6 +93,7 @@ def remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
 def size(ht: ImmutableHashTable) -> int:
     if ht.is_empty():
         return 0
+    
     def count(node):
         return 0 if node is None else 1 + count(node._next)
     return sum(count(bucket) for bucket in ht._buckets)
@@ -100,6 +101,7 @@ def size(ht: ImmutableHashTable) -> int:
 
 def is_member(ht: ImmutableHashTable, value) -> bool:
     index = ht._hash(value)
+
     def check(node):
         return node is not None and (
             node._value == value or check(node._next))
@@ -117,8 +119,10 @@ def reverse(ht: ImmutableHashTable) -> ImmutableHashTable:
     return ImmutableHashTable(tuple(new_buckets), ht._size)
 
 
-def intersection(a: ImmutableHashTable,
-                  b: ImmutableHashTable) -> ImmutableHashTable:
+def intersection(
+        a: ImmutableHashTable,
+        b: ImmutableHashTable
+        ) -> ImmutableHashTable:
     def traverse(node, acc):
         if node is None:
             return acc
@@ -142,7 +146,7 @@ def to_list(ht: ImmutableHashTable) -> list:
 
 def from_list(lst: list) -> ImmutableHashTable:
     # convert to hashtable
-    return reduce(lambda acc, x: cons(x, acc), lst, empty()) 
+    return reduce(lambda acc, x: cons(x, acc), lst, empty())
 
 
 def find(ht: ImmutableHashTable, predicate: Callable[[Any], bool]):
@@ -156,8 +160,10 @@ def find(ht: ImmutableHashTable, predicate: Callable[[Any], bool]):
     return None
 
 
-def filter(ht: ImmutableHashTable, predicate: Callable[
-    [Any], bool]) -> ImmutableHashTable:
+def filter(
+        ht: ImmutableHashTable,
+        predicate: Callable[[Any], bool]
+        ) -> ImmutableHashTable:
     def filter_bucket(node):
         if node is None:
             return None
@@ -173,7 +179,10 @@ def filter(ht: ImmutableHashTable, predicate: Callable[
     return ImmutableHashTable(tuple(new_buckets), ht._size)
 
 
-def map(ht: ImmutableHashTable, func: Callable[[Any], Any]) -> ImmutableHashTable:
+def map(
+        ht: ImmutableHashTable,
+        func: Callable[[Any], Any]
+        ) -> ImmutableHashTable:
     def map_bucket(node):
         return None if node is None else ImmutableNode(func(
             node._value), map_bucket(node._next))
@@ -182,8 +191,11 @@ def map(ht: ImmutableHashTable, func: Callable[[Any], Any]) -> ImmutableHashTabl
         bucket) for bucket in ht._buckets), ht._size)
 
 
-def ht_reduce(ht: ImmutableHashTable, func: Callable[
-    [Any, Any], Any], initial) -> Any:
+def ht_reduce(
+        ht: ImmutableHashTable,
+        func: Callable[[Any, Any], Any],
+        initial
+        ) -> Any:
     acc = initial
     for bucket in ht._buckets:
         current = bucket
@@ -194,7 +206,7 @@ def ht_reduce(ht: ImmutableHashTable, func: Callable[
 
 
 def concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
-    
+
     def contains(node, value):
         # Check whether the value exists in the linked list
         if node is None:
@@ -206,7 +218,8 @@ def concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
         if bucket_a is None:
             return bucket_b
 
-        # Decide whether to add the current node after processing the subsequent nodes
+        # Decide whether to add the current node after 
+        # processing the subsequent nodes
         merged_next = merge_bucket(bucket_a._next, bucket_b)
 
         if contains(merged_next, bucket_a._value):
