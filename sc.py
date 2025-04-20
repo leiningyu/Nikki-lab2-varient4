@@ -3,15 +3,14 @@ from typing import Callable, Any, Iterator
 
 
 class ImmutableNode:
-    __slots__ = ("_value", "_next")
-
     def __init__(self, value, next_=None):
         self._value = value
         self._next = next_
 
     def __str__(self):
-        return f"{self._value} -> {self._next
-                                   }" if self._next else str(self._value)
+        return f"{self._value} -> {self._next}" \
+            if self._next \
+            else str(self._value)
 
     def __eq__(self, other):
         return isinstance(other, ImmutableNode) and \
@@ -42,11 +41,11 @@ class ImmutableHashTable:
             new_buckets), self._size)
 
 
-def empty() -> ImmutableHashTable:
+def ht_empty() -> ImmutableHashTable:
     return ImmutableHashTable()
 
 
-def cons(value, ht: ImmutableHashTable) -> ImmutableHashTable:
+def ht_cons(value, ht: ImmutableHashTable) -> ImmutableHashTable:
     index = ht._hash(value)
     current = ht._get_bucket(index)
 
@@ -63,19 +62,19 @@ def cons(value, ht: ImmutableHashTable) -> ImmutableHashTable:
         index, ImmutableNode(value, current))
 
 
-def head(node: ImmutableNode):
+def ht_head(node: ImmutableNode):
     if node is None:
         raise ValueError("Empty node")
     return node._value
 
 
-def tail(node: ImmutableNode) -> ImmutableNode:
+def ht_tail(node: ImmutableNode) -> ImmutableNode:
     if node is None:
         raise ValueError("Empty node")
     return node._next
 
 
-def remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
+def ht_remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
     index = ht._hash(value)
     current = ht._get_bucket(index)
 
@@ -89,7 +88,7 @@ def remove(ht: ImmutableHashTable, value) -> ImmutableHashTable:
     return ht._with_updated_bucket(index, _remove(current))
 
 
-def size(ht: ImmutableHashTable) -> int:
+def ht_size(ht: ImmutableHashTable) -> int:
     if ht.is_empty():
         return 0
 
@@ -98,7 +97,7 @@ def size(ht: ImmutableHashTable) -> int:
     return sum(count(bucket) for bucket in ht._buckets)
 
 
-def is_member(ht: ImmutableHashTable, value) -> bool:
+def ht_member(ht: ImmutableHashTable, value) -> bool:
     index = ht._hash(value)
 
     def check(node):
@@ -107,7 +106,7 @@ def is_member(ht: ImmutableHashTable, value) -> bool:
     return check(ht._get_bucket(index))
 
 
-def reverse(ht: ImmutableHashTable) -> ImmutableHashTable:
+def ht_reverse(ht: ImmutableHashTable) -> ImmutableHashTable:
     def reverse_bucket(node, acc=None):
         return acc if node is None else reverse_bucket(
             node._next, ImmutableNode(node._value, acc))
@@ -118,18 +117,18 @@ def reverse(ht: ImmutableHashTable) -> ImmutableHashTable:
     return ImmutableHashTable(tuple(new_buckets), ht._size)
 
 
-def intersection(
+def ht_intersection(
         a: ImmutableHashTable,
         b: ImmutableHashTable
         ) -> ImmutableHashTable:
     def traverse(node, acc):
         if node is None:
             return acc
-        if is_member(b, node._value):
-            return traverse(node._next, cons(node._value, acc))
+        if ht_member(b, node._value):
+            return traverse(node._next, ht_cons(node._value, acc))
         return traverse(node._next, acc)
 
-    result = empty()
+    result = ht_empty()
     for bucket in a._buckets:
         result = traverse(bucket, result)
     return result
@@ -145,10 +144,10 @@ def to_list(ht: ImmutableHashTable) -> list:
 
 def from_list(lst: list) -> ImmutableHashTable:
     # convert to hashtable
-    return reduce(lambda acc, x: cons(x, acc), lst, empty())
+    return reduce(lambda acc, x: ht_cons(x, acc), lst, ht_empty())
 
 
-def find(ht: ImmutableHashTable, predicate: Callable[[Any], bool]):
+def ht_find(ht: ImmutableHashTable, predicate: Callable[[Any], bool]):
     # find the element that satisfies the condition
     for bucket in ht._buckets:
         current = bucket
@@ -159,7 +158,7 @@ def find(ht: ImmutableHashTable, predicate: Callable[[Any], bool]):
     return None
 
 
-def filter(
+def ht_filter(
         ht: ImmutableHashTable,
         predicate: Callable[[Any], bool]
         ) -> ImmutableHashTable:
@@ -178,7 +177,7 @@ def filter(
     return ImmutableHashTable(tuple(new_buckets), ht._size)
 
 
-def map(
+def ht_map(
         ht: ImmutableHashTable,
         func: Callable[[Any], Any]
         ) -> ImmutableHashTable:
@@ -204,7 +203,7 @@ def ht_reduce(
     return acc
 
 
-def concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
+def ht_concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
 
     def contains(node, value):
         # Check whether the value exists in the linked list
@@ -234,19 +233,23 @@ def concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
     return ImmutableHashTable(tuple(new_buckets), a._size)
 
 
-def equals(a: ImmutableHashTable, b: ImmutableHashTable) -> bool:
-    def compare_buckets(bucket_a, bucket_b):
-        if bucket_a is None and bucket_b is None:
-            return True
-        if bucket_a is None or bucket_b is None:
+def ht_equals(a: ImmutableHashTable, b: ImmutableHashTable) -> bool:
+    # iterator compare
+    def compare_chains(chain_a, chain_b):
+        while chain_a is not None and chain_b is not None:
+            if chain_a._value != chain_b._value:
+                return False
+            chain_a = chain_a._next
+            chain_b = chain_b._next
+        return chain_a is None and chain_b is None
+
+    for ba, bb in zip(a._buckets, b._buckets):
+        if not compare_chains(ba, bb):
             return False
-        return bucket_a._value == bucket_b._value and compare_buckets(
-            bucket_a._next, bucket_b._next)
-    return all(compare_buckets(ba, bb) for ba, bb in zip(
-        a._buckets, b._buckets))
+    return True
 
 
-def iterator(ht: ImmutableHashTable) -> Iterator:
+def ht_iterator(ht: ImmutableHashTable) -> Iterator:
     items = to_list(ht)
     while items:
         yield items.pop(0)
