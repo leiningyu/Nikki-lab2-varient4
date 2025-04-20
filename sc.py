@@ -203,7 +203,10 @@ def ht_reduce(
     return acc
 
 
-def ht_concat(a: ImmutableHashTable, b: ImmutableHashTable) -> ImmutableHashTable:
+def ht_concat(
+        a: ImmutableHashTable,
+        b: ImmutableHashTable
+        ) -> ImmutableHashTable:
 
     def contains(node, value):
         # Check whether the value exists in the linked list
