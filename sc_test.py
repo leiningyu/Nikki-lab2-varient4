@@ -95,7 +95,7 @@ def test_reduce():
 
 def test_equals():
     ht1 = from_list([1, 2, 3])
-    ht2 = from_list([1, 2, 3])
+    ht2 = from_list([1, 3, 2])
     ht3 = from_list([1, 2])
     assert ht_equals(ht1, ht2) is True
     assert ht_equals(ht1, ht3) is False
@@ -150,7 +150,7 @@ def test_api():
     assert ht_equals(inter, from_list([1, None]))
 
     # to_from_list
-    to_list(ht1) == [1, None] or to_list(ht1) == [None, 1]
+    assert to_list(ht1) == [1, None] or to_list(ht1) == [None, 1]
     assert ht_equals(ht1, from_list([1, None]))
     assert ht_equals(ht1, from_list([1, None, 1]))
 
@@ -162,12 +162,12 @@ def test_api():
     collected = []
     for item in ht_iterator(ht1):
         collected.append(item)
-    assert collected == [1, None] or collected == [None, 1]
+    assert ht_equals(from_list(collected), from_list([None, 1]))
 
     # filter
     numbers = from_list([1, 2, 3, 4])
     even = ht_filter(numbers, lambda x: x % 2 == 0)
-    assert sorted(to_list(even)) == [2, 4]
+    assert ht_equals(even, from_list([2, 4]))
 
     # map
     doubled = ht_map(numbers, lambda x: x * 2)
@@ -187,15 +187,15 @@ def test_from_list_to_list_equality(a):
     assert sorted(to_list(from_list(a))) == sorted(a)
 
 
-@given(st.lists(st.integers(), unique=True))
+@given(st.lists(st.integers()))
 def test_monoid_identity(b):
     ht = from_list(b)
 
     combined_left = ht_concat(ht_empty(), ht)
-    assert sorted(to_list(combined_left)) == sorted(b)
+    assert ht_equals(combined_left, from_list(b))
 
     combined_right = ht_concat(ht, ht_empty())
-    assert sorted(to_list(combined_right)) == sorted(b)
+    assert ht_equals(combined_right, from_list(b))
 
 
 @given(
