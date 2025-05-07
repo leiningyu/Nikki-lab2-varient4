@@ -37,8 +37,7 @@ class ImmutableHashTable:
             self, index: int, new_head) -> 'ImmutableHashTable':
         new_buckets = list(self._buckets)
         new_buckets[index] = new_head
-        return ImmutableHashTable(tuple(
-            new_buckets), self._size)
+        return ImmutableHashTable(tuple(new_buckets), self._size)
 
 
 def ht_empty() -> ImmutableHashTable:
@@ -51,8 +50,11 @@ def ht_cons(value, ht: ImmutableHashTable) -> ImmutableHashTable:
 
     # Check repetition
     def contains(node):
-        return node is not None and (
-            node._value == value or contains(node._next))
+        while node is not None:
+            if node._value == value:
+                return True
+            node = node._next
+        return False
 
     if contains(current):
         return ht
@@ -237,17 +239,18 @@ def ht_concat(
 
 
 def ht_equals(a: ImmutableHashTable, b: ImmutableHashTable) -> bool:
-    # iterator compare
-    def compare_chains(chain_a, chain_b):
-        while chain_a is not None and chain_b is not None:
-            if chain_a._value != chain_b._value:
-                return False
-            chain_a = chain_a._next
-            chain_b = chain_b._next
-        return chain_a is None and chain_b is None
+    if len(a._buckets) != len(b._buckets):
+        return False
+
+    def chain_to_set(chain):
+        result = set()
+        while chain is not None:
+            result.add((chain._value))
+            chain = chain._next
+        return result
 
     for ba, bb in zip(a._buckets, b._buckets):
-        if not compare_chains(ba, bb):
+        if chain_to_set(ba) != chain_to_set(bb):
             return False
     return True
 
