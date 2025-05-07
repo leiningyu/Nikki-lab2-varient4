@@ -147,7 +147,7 @@ def test_api():
 
     # intersection
     inter = ht_intersection(ht1, ht2)
-    assert to_list(inter) == [1, None] or to_list(inter) == [None, 1]
+    assert ht_equals(inter, from_list([1, None]))
 
     # to_from_list
     to_list(ht1) == [1, None] or to_list(ht1) == [None, 1]
@@ -199,9 +199,9 @@ def test_monoid_identity(b):
 
 
 @given(
-    a=st.lists(st.integers(), unique=True),
-    b=st.lists(st.integers(), unique=True),
-    c=st.lists(st.integers(), unique=True)
+    a=st.lists(st.integers()),
+    b=st.lists(st.integers()),
+    c=st.lists(st.integers())
 )
 def test_monoid_associativity(a, b, c):
     ht_a = from_list(a)
@@ -211,7 +211,7 @@ def test_monoid_associativity(a, b, c):
     left = ht_concat(ht_concat(ht_a, ht_b), ht_c)
     right = ht_concat(ht_a, ht_concat(ht_b, ht_c))
 
-    assert sorted(to_list(left)) == sorted(to_list(right))
+    assert ht_equals(left, right)
 
 
 @given(st.lists(st.integers(), unique=True))
