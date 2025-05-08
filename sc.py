@@ -180,15 +180,14 @@ def ht_filter(
 
 
 def ht_map(
-        ht: ImmutableHashTable,
-        func: Callable[[Any], Any]
-        ) -> ImmutableHashTable:
-    def map_bucket(node):
-        return None if node is None else ImmutableNode(func(
-            node._value), map_bucket(node._next))
+    ht: ImmutableHashTable,
+    func: Callable[[Any], Any]
+    ) -> ImmutableHashTable:
+    new_ht = ImmutableHashTable(size=ht._size)
+    for value in ht_iterator(ht):
+        new_ht = ht_cons(func(value), new_ht)
+    return new_ht
 
-    return ImmutableHashTable(tuple(map_bucket(
-        bucket) for bucket in ht._buckets), ht._size)
 
 
 def ht_reduce(
@@ -239,21 +238,17 @@ def ht_concat(
 
 
 def ht_equals(a: ImmutableHashTable, b: ImmutableHashTable) -> bool:
-    if len(a._buckets) != len(b._buckets):
-        return False
+    if a.is_empty() and b.is_empty():
+        return True
 
-    def chain_to_set(chain):
-        result = set()
-        while chain is not None:
-            result.add((chain._value))
-            chain = chain._next
-        return result
+    for i in ht_iterator(a):
+        if not ht_member(b, i):
+            return False
 
-    for ba, bb in zip(a._buckets, b._buckets):
-        if chain_to_set(ba) != chain_to_set(bb):
+    for i in ht_iterator(b):
+        if not ht_member(a, i):
             return False
     return True
-
 
 def ht_iterator(ht: ImmutableHashTable) -> Iterator:
     items = to_list(ht)
