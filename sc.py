@@ -180,14 +180,13 @@ def ht_filter(
 
 
 def ht_map(
-    ht: ImmutableHashTable,
-    func: Callable[[Any], Any]
-    ) -> ImmutableHashTable:
+        ht: ImmutableHashTable,
+        func: Callable[[Any], Any]
+        ) -> ImmutableHashTable:
     new_ht = ImmutableHashTable(size=ht._size)
     for value in ht_iterator(ht):
         new_ht = ht_cons(func(value), new_ht)
     return new_ht
-
 
 
 def ht_reduce(
@@ -249,6 +248,7 @@ def ht_equals(a: ImmutableHashTable, b: ImmutableHashTable) -> bool:
         if not ht_member(a, i):
             return False
     return True
+
 
 def ht_iterator(ht: ImmutableHashTable) -> Iterator:
     items = to_list(ht)
