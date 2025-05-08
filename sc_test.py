@@ -23,13 +23,13 @@ def test_cons():
     ht = ht_cons("a", ht_empty())
     assert "a" in to_list(ht)
     ht = ht_cons("b", ht)
-    assert sorted(to_list(ht)) == ["a", "b"]
+    assert ht_equals(ht, from_list(["a", "b"]))
 
 
 def test_remove():
     ht = from_list([1, 2, 3])
     ht = ht_remove(ht, 2)
-    assert sorted(to_list(ht)) == [1, 3]
+    assert ht_equals(ht, from_list([1, 3]))
 
 
 def test_is_member():
@@ -48,43 +48,43 @@ def test_concat():
     ht1 = from_list([1, 2])
     ht2 = from_list([3, 4])
     combined = ht_concat(ht1, ht2)
-    assert sorted(to_list(combined)) == [1, 2, 3, 4]
+    assert ht_equals(combined, from_list([1, 2, 3, 4]))
 
 
 def test_intersection():
     empty_ht = ht_empty()
     ht1 = from_list([1, 2, 3])
-    assert to_list(ht_intersection(ht1, empty_ht)) == []
-    assert to_list(ht_intersection(empty_ht, ht1)) == []
+    assert ht_equals(ht_intersection(ht1, empty_ht), ht_empty())
+    assert ht_equals(ht_intersection(empty_ht, ht1), ht_empty())
 
     ht2 = from_list([1, 2, 3])
     ht3 = from_list([2, 3, 4])
     inter_partial = ht_intersection(ht2, ht3)
-    assert sorted(to_list(inter_partial)) == [2, 3]
+    assert ht_equals(inter_partial, from_list([2, 3]))
 
 
 def test_to_list():
     lst = [3, 1, 4, 2]
     ht = from_list(lst)
-    assert sorted(to_list(ht)) == sorted(lst)
+    assert ht_equals(ht, from_list(lst))
 
 
 def test_from_list():
     lst = [5, 2, 8, 1]
     ht = from_list(lst)
-    assert sorted(to_list(ht)) == sorted(lst)
+    assert ht_equals(ht, from_list(lst))
 
 
 def test_filter():
     ht = from_list([1, 2, 3, 4])
     filtered = ht_filter(ht, lambda x: x % 2 == 0)
-    assert sorted(to_list(filtered)) == [2, 4]
+    assert ht_equals(filtered, from_list([2, 4]))
 
 
 def test_map():
     ht = from_list([1, 2, 3])
     mapped = ht_map(ht, lambda x: x * 2)
-    assert sorted(to_list(mapped)) == [2, 4, 6]
+    assert ht_equals(mapped, from_list([2, 4, 6]))
 
 
 def test_reduce():
@@ -171,7 +171,7 @@ def test_api():
 
     # map
     doubled = ht_map(numbers, lambda x: x * 2)
-    assert sorted(to_list(doubled)) == [2, 4, 6, 8]
+    assert ht_equals(doubled, from_list([2, 4, 6, 8]))
 
     # reduce
     sum_result = ht_reduce(numbers, lambda acc, x: acc + x, 0)
